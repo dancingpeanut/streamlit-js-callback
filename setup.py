@@ -7,7 +7,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setuptools.setup(
     name="streamlit-js-callback",
-    version="0.0.1",
+    version="0.2.3",
     author="Tongshengzhou",
     author_email="tongshengzhou@gmail.com",
     description="Eval js code with callbaack",

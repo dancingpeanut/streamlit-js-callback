@@ -5,7 +5,7 @@ import streamlit.components.v1 as components
 # the component, and True when we're ready to package and distribute it.
 # (This is, of course, optional - there are innumerable ways to manage your
 # release process.)
-_RELEASE = False
+_RELEASE = True
 
 # Declare a Streamlit component. `declare_component` returns a function
 # that is used to create instances of the component. We're naming this
@@ -68,7 +68,7 @@ def streamlit_js_callback(code, key=None):
     # "default" is a special argument that specifies the initial return
     # value of the component before the user has interacted with it.
     component_value = _component_func(code=code, key=key, default=0)
-    if component_value.startswith("Eval code error: "):
+    if str(component_value).startswith("Eval code error: "):
         raise Exception(component_value)
 
     # We could modify the value returned from the component if we wanted.
