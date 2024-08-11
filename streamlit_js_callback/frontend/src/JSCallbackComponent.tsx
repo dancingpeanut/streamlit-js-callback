@@ -17,7 +17,6 @@ class JSCallbackComponent extends StreamlitComponentBase<State> {
   }
 
   async componentDidMount() {
-    console.log("componentDidMount")
     const code = this.props.args["code"]
     if (!this.state.hasRun) {
       let result: string
