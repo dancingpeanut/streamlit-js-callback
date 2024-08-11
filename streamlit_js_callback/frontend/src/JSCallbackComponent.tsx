@@ -17,16 +17,18 @@ class JSCallbackComponent extends StreamlitComponentBase<State> {
   }
 
   async componentDidMount() {
+    console.log("componentDidMount")
     const code = this.props.args["code"]
-
     if (!this.state.hasRun) {
+      let result: string
       try {
         const dynamicFunction = new Function("sendMessage", code)
-        dynamicFunction(this.sendMessage.bind(this))
+        result = dynamicFunction(this.sendMessage.bind(this))
       } catch (e) {
-        this.sendMessage("Eval code error: " + String(e))
+        result = "Eval code error: " + String(e)
       }
       this.setState({ hasRun: true })
+      this.sendMessage(result)
     }
   }
 

@@ -4,36 +4,31 @@ from streamlit_js_callback import streamlit_js_callback
 
 st.subheader("JS Callback Component")
 
-result = streamlit_js_callback("""
-   (async function() {
-        return await fetch("https://reqres.in/api/products/3").then(function(response) {
-            return response.json();
-        })
-    })().then((item) => {
-        console.log(item)
-        sendMessage(JSON.stringify(item))
-    })
-
-console.log("-- streamlit_js_callback");
-sendMessage("== ==")
-return 12345;
+result1 = streamlit_js_callback("""
+console.log("eval 1 + 1")
+return 1 + 1
 """)
+if result1:
+    st.text("Received result1: " + str(result1))
 
-if result:
-    print("Recived:", result)
-    st.text("Recived: " + result)
+result2 = streamlit_js_callback("""
+console.log("hello")
+sendMessage("hello")
+""")
+if result2:
+    st.text("Received result2: " + str(result2))
 
 st.button("haha")
 
-# result = streamlit_js_callback("""
-#     window.parent.document.querySelectorAll('button[kind="secondary"]').forEach((item) => {
-#         item.addEventListener("click", function(e){
-#             console.log(e.target)
-#             window.postMessage({type: "jscallback", data: "Click Button!"}, "*");
-#         });
-#     })
-# """)
-
-# if result:
-#     print("Recived:", result)
-#     st.text("Recived: " + result)
+result3 = streamlit_js_callback("""
+    let clickCount = 0
+    window.parent.document.querySelectorAll('button[kind="secondary"]').forEach((item) => {
+        item.addEventListener("click", function(e) {
+            clickCount += 1
+            console.log(clickCount)
+            sendMessage(clickCount)
+        });
+    })
+""", key="button_click")
+if result3:
+    st.text(f"Received result3: {result3}")
