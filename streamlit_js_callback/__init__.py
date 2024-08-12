@@ -1,4 +1,5 @@
 import os
+import streamlit as st
 import streamlit.components.v1 as components
 
 # Create a _RELEASE constant. We'll set this to False while we're developing
@@ -38,6 +39,46 @@ else:
     _component_func = components.declare_component("streamlit_js_callback", path=build_dir)
 
 
+def _stylized_container(key):
+    """
+    Add a spaceless container to the app.
+
+    Insert a container into the app, which receives an iframe that does not
+    render anything. Style this container using CSS and a unique key. The style
+    targeting `"stVerticalBlockBorderWrapper"` removes 1rem of space added by
+    the iframe. While the style targeting the div that contains the iframe
+    changes its height from 1.5625rem to 0.
+
+    Parameters
+    ----------
+    key : str, int or None
+        A key associated with this container. This needs to be unique since all
+        styles will be applied to the container with this key.
+
+    Returns
+    -------
+    container : DeltaGenerator
+        A container object. Elements can be added to this container using
+        either the "with" notation or by calling methods directly on the
+        returned object.
+    """
+    key = f"js_callback_{key}"
+    selector = f"div.element-container > div.stHtml > span.{key}"
+    css = (
+        f"""
+        <style>
+            div[data-testid="stVerticalBlockBorderWrapper"]:has(> div > div[data-testid="stVerticalBlock"] > {selector}) {{
+                display: none;
+            }}
+        </style>
+        """
+        f"<span class='{key}'></span>"
+    )
+    container = st.container(height=0)
+    container.html(css)
+    return container
+
+
 # Create a wrapper function for the component. This is an optional
 # best practice - we could simply expose the component function returned by
 # `declare_component` and call it done. The wrapper allows us to customize
@@ -67,7 +108,10 @@ def streamlit_js_callback(code, key=None):
     #
     # "default" is a special argument that specifies the initial return
     # value of the component before the user has interacted with it.
-    component_value = _component_func(code=code, key=key, default=0)
+
+    with _stylized_container(key=key):
+        component_value = _component_func(code=code, key=key, default=None)
+
     if str(component_value).startswith("Eval code error: "):
         raise Exception(component_value)
 

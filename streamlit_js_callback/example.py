@@ -4,6 +4,8 @@ from streamlit_js_callback import streamlit_js_callback
 
 st.subheader("JS Callback Component")
 
+st.button("click me!")
+
 result1 = streamlit_js_callback("""
 console.log("eval 1 + 1")
 return 1 + 1
@@ -17,8 +19,6 @@ sendMessage("hello")
 """)
 if result2:
     st.text("Received result2: " + str(result2))
-
-st.button("haha")
 
 result3 = streamlit_js_callback("""
     let clickCount = 0
