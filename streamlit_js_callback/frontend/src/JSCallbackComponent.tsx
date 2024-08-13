@@ -21,9 +21,11 @@ class JSCallbackComponent extends StreamlitComponentBase<State> {
     if (!this.state.hasRun) {
       let result: string
       try {
-        const dynamicFunction = new Function("sendMessage", code)
-        result = dynamicFunction(this.sendMessage.bind(this))
+        const AsyncFunction = Object.getPrototypeOf(async function () { }).constructor
+        const asyncFunction = new AsyncFunction("sendMessage", code);
+        result = await asyncFunction(this.sendMessage.bind(this));
       } catch (e) {
+        console.error(e)
         result = "Eval code error: " + String(e)
       }
       this.setState({ hasRun: true })
